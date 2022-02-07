@@ -5,13 +5,13 @@ export function getProducts() {
 }
 
 export function addProduct(product) {
-  return http.post(`http://localhost:3001/admin`);
+  return http.post(`http://localhost:3001/admin`, product);
 }
 
 export function updateProduct(product) {
-  return http.put(`http://localhost:3001/admin`);
+  return http.put(`http://localhost:3001/admin`, product);
 }
 
 export function deleteProduct(product) {
-  return http.delete(`http://localhost:3001/admin`);
+  return http.delete(`http://localhost:3001/admin`, product);
 }
