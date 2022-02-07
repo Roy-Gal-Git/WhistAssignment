@@ -9,27 +9,30 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  let product = new Product(req.body);
+  console.log(req.body);
 
-  try {
-    product = await product.save();
-    res.send(product);
-  } catch (err) {
-    console.log(`[ERROR]: ${err.message}`);
-  }
+  // let product = new Product(req.body);
+
+  // try {
+  //   product = await product.save();
+  //   res.send(product);
+  // } catch (err) {
+  //   console.log(`[ERROR]: ${err.message}`);
+  // }
 });
 
 router.put("/", async (req, res) => {
-  const options = { new: false };
-  let product = await Product.findByIdAndUpdate(
-    req.body._id,
-    req.body,
-    options
-  );
+  console.log(req.body);
+  // const options = { new: false };
+  // let product = await Product.findByIdAndUpdate(
+  //   req.body._id,
+  //   req.body,
+  //   options
+  // );
 
-  if (!product) return res.status(404).send("[404]: Product not found.");
+  // if (!product) return res.status(404).send("[404]: Product not found.");
 
-  res.send(product);
+  // res.send(product);
 });
 
 router.delete("/", async (req, res) => {
