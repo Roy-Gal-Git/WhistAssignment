@@ -18,6 +18,9 @@ class AdminDashboard extends Component {
     currentPage: 1,
     sortColumn: { path: "name", order: "asc" },
     showModal: false,
+    editedProduct: { name: "", price: "", description: "", imageURL: "" },
+    modalLabel: "",
+    modalSubmit: "",
   };
 
   async componentDidMount() {
@@ -25,42 +28,53 @@ class AdminDashboard extends Component {
     this.setState({ products });
   }
 
-  // handleShow = () => {
-  //   this.setState({ showModal: true });
-  // };
-
-  // handleClose = () => {
-  //   this.setState({ showModal: false });
-  // };
-
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
   };
 
-  handleModal = () => {
-    this.setState({ showModal: !this.state.showModal });
+  handleModal = (product, label, onSubmit) => {
+    this.setState({
+      showModal: !this.state.showModal,
+      editedProduct: product,
+      modalLabel: label,
+      modalSubmit: onSubmit,
+    });
   };
 
   handleDelete = async (product) => {
-    const { pageSize, currentPage } = this.state;
+    // const { pageSize, currentPage } = this.state;
     try {
-      await deleteProduct(product);
+      deleteProduct(product)
+        .then(() => getProducts())
+        .then(({ data: products }) => this.setState({ products }));
     } catch (err) {
       console.log(err.message);
     }
-    const products = this.state.products.filter((p) => p.name !== product.name);
-    if (!(products % pageSize) && currentPage > 1)
-      this.setState({ products: products, currentPage: currentPage - 1 });
-    else this.setState({ products });
+    // const products = this.state.products.filter((p) => p.name !== product.name);
+    // if (!(products % pageSize) && currentPage > 1)
+    //   this.setState({ products: products, currentPage: currentPage - 1 });
+    // else this.setState({ products });
   };
 
   handleUpdate = async (product) => {
-    const products = [...this.state.products];
-    const index = products.indexOf(product);
-    products[index] = { ...products[index] };
-    // IMPLEMENT UPDATE LOGIC
     try {
-      await updateProduct(product);
+      updateProduct(product)
+        .then(() => getProducts())
+        .then(({ data: products }) =>
+          this.setState({ showModal: false, products })
+        );
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  handleAdd = async (product) => {
+    try {
+      addProduct(product)
+        .then(() => getProducts())
+        .then(({ data: products }) =>
+          this.setState({ showModal: false, products })
+        );
     } catch (err) {
       console.log(err.message);
     }
@@ -90,10 +104,15 @@ class AdminDashboard extends Component {
   };
 
   render() {
-    const { currentPage, pageSize, products, sortColumn, showModal } = this.state;
-
-    if (products.length === 0)
-      return <p>There are no products in the database.</p>;
+    const {
+      currentPage,
+      pageSize,
+      sortColumn,
+      showModal,
+      modalLabel: currentAction,
+      editedProduct,
+      modalSubmit,
+    } = this.state;
 
     const { totalCount, data: allproducts } = this.getPageData();
 
@@ -102,15 +121,21 @@ class AdminDashboard extends Component {
         <ModalBox
           show={showModal}
           onModal={this.handleModal}
+          label={currentAction}
+          currentEdit={editedProduct}
+          onSubmit={modalSubmit}
         ></ModalBox>
         <div className="mx-5 mt-4">
           <div className="col">
-            <p>Showing {totalCount} products in the database.</p>
-          </div>
-          <div className="col">
             <div className="d-flex flex-row-reverse">
               <button
-                onClick={() => console.log("Add")}
+                onClick={() =>
+                  this.handleModal(
+                    { name: "", price: "", description: "", imageURL: "" },
+                    "Add Product",
+                    this.handleAdd
+                  )
+                }
                 className="btn btn-sm btn-success mx-4"
               >
                 Add
@@ -120,6 +145,7 @@ class AdminDashboard extends Component {
               products={allproducts}
               onDelete={this.handleDelete}
               onUpdate={this.handleUpdate}
+              onAdd={this.handleAdd}
               onSort={this.handleSort}
               sortColumn={sortColumn}
               onModal={this.handleModal}

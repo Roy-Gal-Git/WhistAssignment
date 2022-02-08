@@ -17,7 +17,9 @@ class ProductsTable extends React.Component {
       content: (product) => (
         <div>
           <button
-            onClick={() => this.props.onModal()} //this.props.onUpdate(product)}
+            onClick={() =>
+              this.props.onModal(product, "Edit Product", this.props.onUpdate)
+            }
             className="btn btn-sm btn-primary mx-1"
           >
             Edit

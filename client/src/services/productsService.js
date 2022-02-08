@@ -13,5 +13,5 @@ export function updateProduct(product) {
 }
 
 export function deleteProduct(product) {
-  return http.delete(`http://localhost:3001/admin`, product);
+  return http.delete(`http://localhost:3001/admin`, { data: { ...product } });
 }
