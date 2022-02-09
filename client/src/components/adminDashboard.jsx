@@ -41,43 +41,36 @@ class AdminDashboard extends Component {
     });
   };
 
-  handleDelete = async (product) => {
-    // const { pageSize, currentPage } = this.state;
-    try {
-      deleteProduct(product)
-        .then(() => getProducts())
-        .then(({ data: products }) => this.setState({ products }));
-    } catch (err) {
-      console.log(err.message);
-    }
-    // const products = this.state.products.filter((p) => p.name !== product.name);
-    // if (!(products % pageSize) && currentPage > 1)
-    //   this.setState({ products: products, currentPage: currentPage - 1 });
-    // else this.setState({ products });
+  handleDelete = (product) => {
+    const { products, pageSize, currentPage } = this.state;
+
+    deleteProduct(product)
+      .then(() => getProducts())
+      .then(({ data: products }) => this.setState({ products }))
+      .then(() => {
+        if (products.length % pageSize && currentPage > 1) {
+          this.setState({ currentPage: currentPage - 1 });
+        }
+      })
+      .catch((err) => console.log(err.message));
   };
 
-  handleUpdate = async (product) => {
-    try {
-      updateProduct(product)
-        .then(() => getProducts())
-        .then(({ data: products }) =>
-          this.setState({ showModal: false, products })
-        );
-    } catch (err) {
-      console.log(err.message);
-    }
+  handleUpdate = (product) => {
+    updateProduct(product)
+      .then(() => getProducts())
+      .then(({ data: products }) =>
+        this.setState({ showModal: false, products })
+      )
+      .catch((err) => console.log(err.message));
   };
 
-  handleAdd = async (product) => {
-    try {
-      addProduct(product)
-        .then(() => getProducts())
-        .then(({ data: products }) =>
-          this.setState({ showModal: false, products })
-        );
-    } catch (err) {
-      console.log(err.message);
-    }
+  handleAdd = (product) => {
+    addProduct(product)
+      .then(() => getProducts())
+      .then(({ data: products }) =>
+        this.setState({ showModal: false, products })
+      )
+      .catch((err) => console.log(err.message));
   };
 
   handleSort = (sortColumn) => {
