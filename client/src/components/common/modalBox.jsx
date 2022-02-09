@@ -1,6 +1,6 @@
 import React from "react";
-import ProductEditForm from "../productEditForm";
-import { Modal, Button } from "react-bootstrap";
+import ProductForm from "../productForm";
+import { Modal } from "react-bootstrap";
 
 const ModalBox = ({ show, onModal, onSubmit, currentEdit, label }) => {
   return (
@@ -9,7 +9,7 @@ const ModalBox = ({ show, onModal, onSubmit, currentEdit, label }) => {
         <Modal.Title>{label}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ProductEditForm data={currentEdit} onSubmit={onSubmit} />
+        <ProductForm data={currentEdit} onSubmit={onSubmit} />
       </Modal.Body>
     </Modal>
   );
