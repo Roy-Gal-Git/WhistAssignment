@@ -2,7 +2,7 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
 
-class ProductEditForm extends Form {
+class ProductForm extends Form {
   state = {
     data: { ...this.props.data },
     errors: {},
@@ -11,7 +11,7 @@ class ProductEditForm extends Form {
   schema = {
     name: Joi.string().required().label("Name"),
     price: Joi.number().required().label("Price"),
-    description: Joi.string().required().label("Description"),
+    description: Joi.string().required().max(255).label("Description"),
     imageURL: Joi.string().required().label("Image URL"),
     _id: Joi.string().label("ID"),
     __v: Joi.number().label("Version"),
@@ -36,4 +36,4 @@ class ProductEditForm extends Form {
   }
 }
 
-export default ProductEditForm;
+export default ProductForm;
